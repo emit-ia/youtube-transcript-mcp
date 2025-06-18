@@ -188,6 +188,187 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
       }
 
+      case 'youtube_get_channel_videos': {
+        const { channelUrl, maxVideos = 50 } = args as {
+          channelUrl: string;
+          maxVideos?: number;
+        };
+
+        const videos = await youtubeService.getChannelVideos(channelUrl, maxVideos);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                channelUrl,
+                totalVideos: videos.length,
+                videos: videos.map(v => ({
+                  id: v.id,
+                  title: v.title,
+                  url: v.url,
+                  publishedAt: v.publishedAt,
+                  duration: v.duration,
+                  viewCount: v.viewCount,
+                })),
+              }, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'youtube_get_channel_video_urls': {
+        const { channelUrl, maxVideos = 50 } = args as {
+          channelUrl: string;
+          maxVideos?: number;
+        };
+
+        const urls = await youtubeService.getChannelVideoUrls(channelUrl, maxVideos);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                channelUrl,
+                totalUrls: urls.length,
+                videoUrls: urls,
+              }, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'youtube_get_channel_transcripts': {
+        const { channelUrl, maxVideos = 50, maxConcurrent = 3 } = args as {
+          channelUrl: string;
+          maxVideos?: number;
+          maxConcurrent?: number;
+        };
+
+        const transcripts = await youtubeService.getChannelTranscripts(channelUrl, maxVideos, maxConcurrent);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                channelUrl,
+                processedVideos: transcripts.length,
+                transcripts: transcripts.map(t => ({
+                  videoId: t.videoId,
+                  title: t.title,
+                  language: t.language,
+                  segmentCount: t.segments.length,
+                  duration: t.totalDuration,
+                  preview: t.segments.slice(0, 2).map(s => s.text).join(' '),
+                })),
+              }, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'youtube_get_playlist_info': {
+        const { playlistUrl } = args as {
+          playlistUrl: string;
+        };
+
+        const playlistInfo = await youtubeService.getPlaylistInfo(playlistUrl);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(playlistInfo, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'youtube_get_playlist_videos': {
+        const { playlistUrl, maxVideos = 50 } = args as {
+          playlistUrl: string;
+          maxVideos?: number;
+        };
+
+        const videos = await youtubeService.getPlaylistVideos(playlistUrl, maxVideos);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                playlistUrl,
+                totalVideos: videos.length,
+                videos: videos.map(v => ({
+                  id: v.id,
+                  title: v.title,
+                  url: v.url,
+                  publishedAt: v.publishedAt,
+                  duration: v.duration,
+                  viewCount: v.viewCount,
+                  playlistPosition: v.playlistPosition,
+                })),
+              }, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'youtube_get_playlist_video_urls': {
+        const { playlistUrl, maxVideos = 50 } = args as {
+          playlistUrl: string;
+          maxVideos?: number;
+        };
+
+        const urls = await youtubeService.getPlaylistVideoUrls(playlistUrl, maxVideos);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                playlistUrl,
+                totalUrls: urls.length,
+                videoUrls: urls,
+              }, null, 2),
+            },
+          ],
+        };
+      }
+
+      case 'youtube_get_playlist_transcripts': {
+        const { playlistUrl, maxVideos = 50, maxConcurrent = 3 } = args as {
+          playlistUrl: string;
+          maxVideos?: number;
+          maxConcurrent?: number;
+        };
+
+        const transcripts = await youtubeService.getPlaylistTranscripts(playlistUrl, maxVideos, maxConcurrent);
+
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                playlistUrl,
+                processedVideos: transcripts.length,
+                transcripts: transcripts.map(t => ({
+                  videoId: t.videoId,
+                  title: t.title,
+                  language: t.language,
+                  segmentCount: t.segments.length,
+                  duration: t.totalDuration,
+                  preview: t.segments.slice(0, 2).map(s => s.text).join(' '),
+                })),
+              }, null, 2),
+            },
+          ],
+        };
+      }
+
+
       default:
         throw new Error(`Unknown tool: ${name}`);
     }

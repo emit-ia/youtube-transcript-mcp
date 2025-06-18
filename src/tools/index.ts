@@ -117,9 +117,178 @@ export const TRANSCRIPT_SUMMARY_TOOL: Tool = {
   }
 };
 
+export const GET_CHANNEL_VIDEOS_TOOL: Tool = {
+  name: 'youtube_get_channel_videos',
+  description: 'Get video list from a YouTube channel',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      channelUrl: {
+        type: 'string',
+        description: 'YouTube channel URL (youtube.com/channel/..., youtube.com/@..., etc.)'
+      },
+      maxVideos: {
+        type: 'number',
+        description: 'Maximum number of videos to retrieve',
+        default: 50,
+        minimum: 1,
+        maximum: 200
+      }
+    },
+    required: ['channelUrl']
+  }
+};
+
+export const GET_CHANNEL_VIDEO_URLS_TOOL: Tool = {
+  name: 'youtube_get_channel_video_urls',
+  description: 'Get video URLs from a YouTube channel',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      channelUrl: {
+        type: 'string',
+        description: 'YouTube channel URL'
+      },
+      maxVideos: {
+        type: 'number',
+        description: 'Maximum number of video URLs to retrieve',
+        default: 50,
+        minimum: 1,
+        maximum: 200
+      }
+    },
+    required: ['channelUrl']
+  }
+};
+
+export const GET_CHANNEL_TRANSCRIPTS_TOOL: Tool = {
+  name: 'youtube_get_channel_transcripts',
+  description: 'Get transcripts from multiple videos in a YouTube channel',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      channelUrl: {
+        type: 'string',
+        description: 'YouTube channel URL'
+      },
+      maxVideos: {
+        type: 'number',
+        description: 'Maximum number of videos to process',
+        default: 50,
+        minimum: 1,
+        maximum: 200
+      },
+      maxConcurrent: {
+        type: 'number',
+        description: 'Maximum number of concurrent transcript requests',
+        default: 3,
+        minimum: 1,
+        maximum: 10
+      }
+    },
+    required: ['channelUrl']
+  }
+};
+
+export const GET_PLAYLIST_INFO_TOOL: Tool = {
+  name: 'youtube_get_playlist_info',
+  description: 'Get information about a YouTube playlist',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      playlistUrl: {
+        type: 'string',
+        description: 'YouTube playlist URL (youtube.com/playlist?list=... or youtube.com/watch?v=...&list=...)'
+      }
+    },
+    required: ['playlistUrl']
+  }
+};
+
+export const GET_PLAYLIST_VIDEOS_TOOL: Tool = {
+  name: 'youtube_get_playlist_videos',
+  description: 'Get video list from a YouTube playlist',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      playlistUrl: {
+        type: 'string',
+        description: 'YouTube playlist URL'
+      },
+      maxVideos: {
+        type: 'number',
+        description: 'Maximum number of videos to retrieve',
+        default: 50,
+        minimum: 1,
+        maximum: 200
+      }
+    },
+    required: ['playlistUrl']
+  }
+};
+
+export const GET_PLAYLIST_VIDEO_URLS_TOOL: Tool = {
+  name: 'youtube_get_playlist_video_urls',
+  description: 'Get video URLs from a YouTube playlist',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      playlistUrl: {
+        type: 'string',
+        description: 'YouTube playlist URL'
+      },
+      maxVideos: {
+        type: 'number',
+        description: 'Maximum number of video URLs to retrieve',
+        default: 50,
+        minimum: 1,
+        maximum: 200
+      }
+    },
+    required: ['playlistUrl']
+  }
+};
+
+export const GET_PLAYLIST_TRANSCRIPTS_TOOL: Tool = {
+  name: 'youtube_get_playlist_transcripts',
+  description: 'Get transcripts from multiple videos in a YouTube playlist',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      playlistUrl: {
+        type: 'string',
+        description: 'YouTube playlist URL'
+      },
+      maxVideos: {
+        type: 'number',
+        description: 'Maximum number of videos to process',
+        default: 50,
+        minimum: 1,
+        maximum: 200
+      },
+      maxConcurrent: {
+        type: 'number',
+        description: 'Maximum number of concurrent transcript requests',
+        default: 3,
+        minimum: 1,
+        maximum: 10
+      }
+    },
+    required: ['playlistUrl']
+  }
+};
+
+
 export const ALL_TOOLS = [
   GET_TRANSCRIPT_TOOL,
   SEARCH_TRANSCRIPT_TOOL,
   BATCH_TRANSCRIPTS_TOOL,
-  TRANSCRIPT_SUMMARY_TOOL
+  TRANSCRIPT_SUMMARY_TOOL,
+  GET_CHANNEL_VIDEOS_TOOL,
+  GET_CHANNEL_VIDEO_URLS_TOOL,
+  GET_CHANNEL_TRANSCRIPTS_TOOL,
+  GET_PLAYLIST_INFO_TOOL,
+  GET_PLAYLIST_VIDEOS_TOOL,
+  GET_PLAYLIST_VIDEO_URLS_TOOL,
+  GET_PLAYLIST_TRANSCRIPTS_TOOL
 ];

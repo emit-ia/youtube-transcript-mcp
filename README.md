@@ -5,6 +5,9 @@ An MCP (Model Context Protocol) server for extracting and processing YouTube vid
 ## Features
 
 - **Extract transcripts** from YouTube videos
+- **Channel processing** - Get all videos from a YouTube channel  
+- **Playlist processing** - Get all videos from a YouTube playlist
+- **Bulk transcripts** - Extract transcripts from all channel or playlist videos
 - **Search within transcripts** for specific content
 - **Batch processing** of multiple videos
 - **Multiple output formats** (JSON, text, SRT, VTT)
@@ -14,12 +17,12 @@ An MCP (Model Context Protocol) server for extracting and processing YouTube vid
 
 ### Via NPX (Recommended)
 ```bash
-npx youtube-transcript-mcp
+npx @emit-ia/youtube-transcript-mcp
 ```
 
 ### Local Development
 ```bash
-git clone <repository-url>
+git clone https://github.com/emit-ia/youtube-transcript-mcp.git
 cd youtube-transcript-mcp
 npm install
 npm run build
@@ -37,7 +40,7 @@ Add to your Claude Desktop configuration:
   "mcpServers": {
     "youtube-transcript": {
       "command": "npx",
-      "args": ["youtube-transcript-mcp"]
+      "args": ["@emit-ia/youtube-transcript-mcp"]
     }
   }
 }
@@ -93,6 +96,57 @@ Get formatted summary of transcript content.
 - `summaryType` (optional): "brief", "detailed", "topics", "timestamps" (default: "brief")
 - `language` (optional): Language code (default: "en")
 
+#### `youtube_get_channel_videos`
+Get detailed video information from a YouTube channel.
+
+**Parameters:**
+- `channelUrl` (required): YouTube channel URL (supports @username, /c/, /channel/, /user/ formats)
+- `maxVideos` (optional): Maximum number of videos to retrieve (default: 50, max: 200)
+
+#### `youtube_get_channel_video_urls`
+Get just the video URLs from a YouTube channel.
+
+**Parameters:**
+- `channelUrl` (required): YouTube channel URL
+- `maxVideos` (optional): Maximum number of video URLs to retrieve (default: 50, max: 200)
+
+#### `youtube_get_channel_transcripts`
+Extract transcripts from multiple videos in a YouTube channel.
+
+**Parameters:**
+- `channelUrl` (required): YouTube channel URL
+- `maxVideos` (optional): Maximum number of videos to process (default: 10, max: 50)
+- `maxConcurrent` (optional): Max concurrent transcript requests (default: 3, max: 10)
+
+#### `youtube_get_playlist_info`
+Get information about a YouTube playlist.
+
+**Parameters:**
+- `playlistUrl` (required): YouTube playlist URL (supports playlist?list= and watch?v=...&list= formats)
+
+#### `youtube_get_playlist_videos`
+Get detailed video information from a YouTube playlist.
+
+**Parameters:**
+- `playlistUrl` (required): YouTube playlist URL
+- `maxVideos` (optional): Maximum number of videos to retrieve (default: 50, max: 200)
+
+#### `youtube_get_playlist_video_urls`
+Get just the video URLs from a YouTube playlist.
+
+**Parameters:**
+- `playlistUrl` (required): YouTube playlist URL
+- `maxVideos` (optional): Maximum number of video URLs to retrieve (default: 50, max: 200)
+
+#### `youtube_get_playlist_transcripts`
+Extract transcripts from multiple videos in a YouTube playlist.
+
+**Parameters:**
+- `playlistUrl` (required): YouTube playlist URL
+- `maxVideos` (optional): Maximum number of videos to process (default: 50, max: 200)
+- `maxConcurrent` (optional): Max concurrent transcript requests (default: 3, max: 10)
+
+
 ## Example Usage
 
 ```typescript
@@ -108,6 +162,44 @@ const searchResults = await youtube_search_transcript({
   query: "important topic",
   contextWindow: 30
 });
+
+// Get all videos from a channel
+const channelVideos = await youtube_get_channel_videos({
+  channelUrl: "https://youtube.com/@channelname",
+  maxVideos: 25
+});
+
+// Get just the video URLs
+const videoUrls = await youtube_get_channel_video_urls({
+  channelUrl: "https://youtube.com/c/ChannelName",
+  maxVideos: 50
+});
+
+// Get transcripts from channel videos
+const channelTranscripts = await youtube_get_channel_transcripts({
+  channelUrl: "https://youtube.com/@channelname",
+  maxVideos: 10,
+  maxConcurrent: 3
+});
+
+// Get playlist information
+const playlistInfo = await youtube_get_playlist_info({
+  playlistUrl: "https://youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMHjMZOz59Mgq_SUoL"
+});
+
+// Get all videos from a playlist
+const playlistVideos = await youtube_get_playlist_videos({
+  playlistUrl: "https://youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMHjMZOz59Mgq_SUoL",
+  maxVideos: 50
+});
+
+// Get transcripts from playlist videos
+const playlistTranscripts = await youtube_get_playlist_transcripts({
+  playlistUrl: "https://youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMHjMZOz59Mgq_SUoL",
+  maxVideos: 25,
+  maxConcurrent: 3
+});
+
 ```
 
 ## Requirements
